@@ -1,0 +1,21 @@
+express
+@babel/core
+@babel/node
+@babel/preset-env
+@babel/cli
+@babel/plugin-transform-runtime
+@babel/runtime
+--save-dev nodemon
+body-parser	
+mongod za launchat
+mongodb
+
+npm install mongodb
+
+npm install axios u frontend
+
+mongosh
+
+use vue-db za nap db
+
+npm install express mongoose bcrypt jsonwebtoken
