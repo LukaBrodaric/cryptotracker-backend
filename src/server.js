@@ -1,38 +1,21 @@
 const express = require('express');
 const { MongoClient } = require('mongodb');
 const app = express();
-const mongoose = require("mongoose");
+const bodyParser = require('body-parser');
 const database = module.exports = () =>{
 }
 
 database();
 
+
+app.use(bodyParser.json());
+
+// inicijalizacija ruta
+app.use('/api',require('./routes/api'));
+
 app.listen(8009, () =>{
     console.log("Server running");
 })
-
-const User = mongoose.model('User', {
-    username: {
-        type: String,
-        required: true,
-        minlength: 5,
-        maxlength: 255,
-        unique: true,
-    },
-    email: {
-        type: String,
-        required: true,
-        minlength: 5,
-        maxlength: 255,
-        unique: true,
-      },
-      password: {
-        type: String,
-        required: true,
-        minlength: 5,
-        maxlength: 1024,
-      },
-  });
   
   async function connectToMongoDB() {
     try {
