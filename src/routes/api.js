@@ -21,6 +21,7 @@ router.post('/user', function(req, res, next) {
         res.send(user);
       })
       .catch(next);
+console.log("User created!");
   });
   
 
