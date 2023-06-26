@@ -13,6 +13,25 @@ router.get('/users', function(req, res, next) {
     });
 });
 
+//login
+router.post('/login', async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const user = await User.findOne({ email, password }).exec();
+
+    if (!user) {
+      return res.status(401).json({ message: 'Invalid email or password' });
+    }
+
+    // If the user exists and the credentials are correct, return the user details
+    return res.status(200).json({ message: `SUCCESSFULLY LOGGED IN, ${user.username}!!!`})
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
 
 // reg user
 router.post('/user', function(req, res, next) {

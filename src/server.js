@@ -22,13 +22,6 @@ app.use(function(err, req, res, next){
   res.status(422).send({error: err.message});
 });
 
-/*
-app.post('/register', (req, res) =>{
-  res.send({
-    message: `HI ${req.body.email}! Your user was registered`
-  })
-})*/
-
 app.listen(8000, () =>{
     console.log("Server running");
 })
