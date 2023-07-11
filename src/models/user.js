@@ -16,7 +16,17 @@ const userSchema = new Schema({
     password:{
         type: String,
         required:[true, 'Password is required!']
-    }
+    },
+    usercurrency:{
+        type: String,
+        required:false,
+        default: 'USD'
+    },
+    usercurrencyfull:{
+        type: String,
+        required:false,
+        default: 'US Dollar'
+    },
 })
 
 const User = mongoose.model('user', userSchema);

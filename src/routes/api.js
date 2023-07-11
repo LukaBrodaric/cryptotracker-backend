@@ -13,6 +13,38 @@ router.get('/users', function(req, res, next) {
     });
 });
 
+router.get('/userss', function(req, res, next) {
+  const email = req.query.email;
+  const password = req.query.password;
+
+  if (email && password) {
+    User.findOne({ email, password })
+      .then(function(user) {
+        if (user) {
+          const { username, useremail, userpassword, usercurrency, usercurrencyfull, admin } = user;
+          const credentials = {
+            username,
+            useremail,
+            userpassword,
+            usercurrency,
+            usercurrencyfull,
+            admin
+          };
+          res.send(credentials);
+        } else {
+          res.status(404).send('User not found');
+        }
+      })
+      .catch(function(error) {
+        next(error);
+      });
+  } else {
+    res.status(400).send('Invalid parameters');
+  }
+});
+
+
+
 //login
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
@@ -23,9 +55,10 @@ router.post('/login', async (req, res) => {
     if (!user) {
       return res.status(401).json({ message: 'Invalid email or password' });
     }
-
+    
     // If the user exists and the credentials are correct, return the user details
     return res.status(200).json({ message: `SUCCESSFULLY LOGGED IN, ${user.username}!!!`})
+    ret
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: 'Internal server error' });
