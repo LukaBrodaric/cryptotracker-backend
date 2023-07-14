@@ -47,16 +47,3 @@ userSchema.pre('save', async function (next) {
 const User = mongoose.model('User', userSchema);
 
 module.exports = User;
-/*
-const usersCollection = client.db("Cryptotracker").collection("User");
-
-usersCollection.insertOne({ username: "example", password: "hashedPassword" }, (err, result) => {
-  if (err) {
-    console.error("Error inserting user:", err);
-    // Handle the error and respond to the frontend
-    return;
-  }
-  console.log("User registered successfully!");
-  // Respond to the frontend indicating successful registration
-});
-*/
