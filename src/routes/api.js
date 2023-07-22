@@ -1,6 +1,38 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/user');
+const multer = require('multer');
+const fs = require('fs');
+const path = require('path');
+
+// Configure multer for handling file uploads
+const upload = multer({
+  dest: './src/userImages', // Directory where uploaded images will be stored temporarily
+});
+
+router.get('/profilePictures/:filename', function (req, res, next) {
+  const filename = req.params.filename;
+  const profilePicturePath = path.join(__dirname, `../userImages/${filename}`);
+  res.sendFile(profilePicturePath);
+});
+
+// Define a route to handle profile picture upload
+router.post('/uploadProfilePicture', upload.single('image'), function (req, res, next) {
+  const userEmail = req.body.useremail;
+  const tempPath = req.file.path;
+  const targetPath = path.join(__dirname, `../userImages/${userEmail}.jpg`);
+
+  fs.rename(tempPath, targetPath, function (err) {
+    if (err) {
+      console.error('Error moving uploaded image:', err);
+      res.status(500).json({ message: 'Failed to save profile picture' });
+    } else {
+      // Return the filename of the saved image in the response
+      res.status(200).json({ message: 'Profile picture saved successfully', filename: `${userEmail}.jpg` });
+    }
+  });
+});
+
 
 router.post('/updateUserCurrency', function(req, res, next) {
   const { useremail, usercurrency, usercurrencyfull } = req.body;
