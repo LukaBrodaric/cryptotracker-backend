@@ -27,6 +27,11 @@ const userSchema = new Schema({
         required:false,
         default: 'US Dollar'
     },
+    notifications:{
+        type: Boolean,
+        required:false,
+        default: false
+    },
 })
 
 const User = mongoose.model('user', userSchema);
