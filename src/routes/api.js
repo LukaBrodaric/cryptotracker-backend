@@ -4,6 +4,25 @@ const User = require('../models/user');
 const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
+const CryptoData = require('../models/cryptodata');
+
+// Update cryptocurrency values for a specific user
+router.post('/updateCryptoValues', function (req, res, next) {
+  const { useremail, btc, ethereum, ripple, litecoin, bitcoinDash } = req.body;
+
+  // Find the user's cryptocurrency data in the CryptoData collection
+  CryptoData.findOneAndUpdate(
+    { useremail },
+    { btc, ethereum, ripple, litecoin, bitcoinDash },
+    { new: true, upsert: true } // Create a new document if it doesn't exist
+  )
+    .then(function (cryptoData) {
+      res.status(200).json({ message: 'Cryptocurrency values updated successfully', cryptoData });
+    })
+    .catch(function (error) {
+      next(error);
+    });
+});
 
 // Configure multer for handling file uploads
 const upload = multer({
@@ -34,26 +53,31 @@ router.post('/uploadProfilePicture', upload.single('image'), function (req, res,
 });
 
 
-router.post('/updateUserCurrency', function(req, res, next) {
-  const { useremail, usercurrency, usercurrencyfull } = req.body;
+router.post('/updateUserCurrency', async function(req, res, next) {
+  const { email, usercurrency, usercurrencyfull } = req.body;
 
-  // Update the user's currency information in the database
-  User.findOneAndUpdate(
-    { useremail },
-    { usercurrency, usercurrencyfull },
-    { new: true }
-  )
-    .then(function(user) {
-      if (user) {
-        res.status(200).json({ message: 'User currency updated successfully' });
-      } else {
-        res.status(404).json({ message: 'User not found' });
-      }
-    })
-    .catch(function(error) {
-      next(error);
-    });
+  console.log('Request Body:', req.body);
+
+  try {
+    const user = await User.findOne({ email }).exec();
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Update user's currency information
+    user.usercurrency = usercurrency;
+    user.usercurrencyfull = usercurrencyfull;
+    await user.save();
+
+    console.log('User updated:', user);
+    return res.status(200).json({ message: 'User currency updated successfully' });
+  } catch (error) {
+    console.error('Error updating currency:', error);
+    return res.status(500).json({ message: 'Error updating user currency' });
+  }
 });
+
 
 // vraca listu svih usera
 router.get('/users', function(req, res, next) {
