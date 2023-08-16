@@ -144,17 +144,27 @@ router.post('/login', async (req, res) => {
 
 
 // reg user
-router.post('/user', function(req, res, next) {
-    User.create(req.body)
-      .then(function(user) {
-        res.send(user);
-      })
-      .catch(next);
-console.log("User created!");
-  });
+router.post('/user', async (req, res, next) => {
+  try {
+    const user = await User.create(req.body);
+
+    // Create cryptodata entry for the user
+    const cryptodata = new CryptoData({
+      useremail: user.email, // Assuming email is a field in the user model
+    });
+
+    await cryptodata.save();
+
+    res.send(user);
+    console.log("User created!");
+
+  } catch (error) {
+    next(error);
+  }
+});
   
 
-//update user (isto treba saveat cur user u store i onda zamjenit _id sa store.User.id ili store.user.email)
+//update user
 router.put('/user/:id', function(req, res, next){
     User.findByIdAndUpdate({_id: req.params.id}, req.body).then(function(){
       User.findOne({_id: req.params.id}).then(function(user){
@@ -163,7 +173,6 @@ router.put('/user/:id', function(req, res, next){
     });
 });
 
-//saveat current usera u store i zamjenit _id sa store.idem kojeg dobijemo iz monga ili samo izbrisat usera po mailu.
 router.delete('/user/:id', function(req, res, next){
     User.findByIdAndRemove({_id: req.params.id}).then(function(user){
       res.send(user);
@@ -171,18 +180,3 @@ router.delete('/user/:id', function(req, res, next){
 });
 
 module.exports = router;
-
-/*  Duplicate entry error handler
-      .catch(function(error) {
-        if (error.code === 11000 && error.keyPattern && error.keyValue) {
-          // Duplicate key error occurred
-          const duplicateField = Object.keys(error.keyPattern)[0];
-          const duplicateValue = error.keyValue[duplicateField];
-          const errorMessage = `Duplicate ${duplicateField}: ${duplicateValue}`;
-          res.status(400).send({ error: errorMessage });
-        } else {
-          // Other error occurred
-          res.status(500).send({ error: 'An error occurred' });
-        }
-      });
-*/
