@@ -6,6 +6,23 @@ const fs = require('fs');
 const path = require('path');
 const CryptoData = require('../models/cryptodata');
 
+router.get('/getCryptoData', async (req, res) => {
+  const { useremail } = req.query;
+
+  try {
+    const cryptoData = await CryptoData.findOne({ useremail }).exec();
+
+    if (!cryptoData) {
+      return res.status(404).json({ message: 'Cryptocurrency data not found' });
+    }
+
+    return res.status(200).json(cryptoData);
+  } catch (error) {
+    console.error('Error fetching cryptocurrency data:', error);
+    return res.status(500).json({ message: 'Error fetching cryptocurrency data' });
+  }
+});
+
 // Update cryptocurrency values for a specific user
 router.post('/updateCryptoValues', function (req, res, next) {
   const { useremail, btc, ethereum, ripple, litecoin, bitcoinDash } = req.body;
@@ -163,6 +180,27 @@ router.post('/user', async (req, res, next) => {
   }
 });
   
+router.put('/updateUserNotification', async function (req, res, next) {
+  const { email, notification } = req.body;
+
+  try {
+    const user = await User.findOne({ email }).exec();
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Update user's notification attribute
+    user.notifications = notification;
+    await user.save();
+
+    console.log('User updated:', user);
+    return res.status(200).json({ message: 'User notification updated successfully' });
+  } catch (error) {
+    console.error('Error updating notification:', error);
+    return res.status(500).json({ message: 'Error updating user notification' });
+  }
+});
 
 //update user
 router.put('/user/:id', function(req, res, next){

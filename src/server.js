@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 
 const corsOptions = {
-  methods: ['POST'],
+  methods: ['GET', 'PUT', 'POST', 'DELETE'],
   allowedHeaders: ['Content-Type'],
 };
 
