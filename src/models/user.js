@@ -32,6 +32,11 @@ const userSchema = new Schema({
         required:false,
         default: false
     },
+    phonenum:{
+        type: String,
+        required:false,
+        default: +385 
+    },
 })
 
 const User = mongoose.model('user', userSchema);

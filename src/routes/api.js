@@ -179,7 +179,29 @@ router.post('/user', async (req, res, next) => {
     next(error);
   }
 });
-  
+
+router.put('/updatePhoneNumber', async function (req, res, next) {
+  const { email, phonenum } = req.body;
+
+  try {
+    const user = await User.findOne({ email }).exec();
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Update user's notification attribute
+    user.phonenum = phonenum;
+    await user.save();
+
+    console.log('User updated:', user);
+    return res.status(200).json({ message: 'User number updated successfully' });
+  } catch (error) {
+    console.error('Error updating notification:', error);
+    return res.status(500).json({ message: 'Error updating user number' });
+  }
+});
+
 router.put('/updateUserNotification', async function (req, res, next) {
   const { email, notification } = req.body;
 
