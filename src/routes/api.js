@@ -115,14 +115,16 @@ router.get('/userss', function(req, res, next) {
     User.findOne({ email, password })
       .then(function(user) {
         if (user) {
-          const { username, useremail, userpassword, usercurrency, usercurrencyfull, admin } = user;
+          const { username, useremail, userpassword, usercurrency, usercurrencyfull, admin, phonenum, notifications } = user;
           const credentials = {
             username,
             useremail,
             userpassword,
             usercurrency,
             usercurrencyfull,
-            admin
+            admin,
+            phonenum,
+            notifications
           };
           res.send(credentials);
         } else {
@@ -202,8 +204,8 @@ router.put('/updatePhoneNumber', async function (req, res, next) {
   }
 });
 
-router.put('/updateUserNotification', async function (req, res, next) {
-  const { email, notification } = req.body;
+router.post('/updateUserNotification', async function (req, res, next) {
+  const { email, notifications } = req.body;
 
   try {
     const user = await User.findOne({ email }).exec();
@@ -213,7 +215,7 @@ router.put('/updateUserNotification', async function (req, res, next) {
     }
 
     // Update user's notification attribute
-    user.notifications = notification;
+    user.notifications = notifications;
     await user.save();
 
     console.log('User updated:', user);
