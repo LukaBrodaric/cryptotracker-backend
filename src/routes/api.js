@@ -241,4 +241,51 @@ router.delete('/user/:id', function(req, res, next){
     });
 });
 
+// Update user's name
+router.put('/updateUserName', async function (req, res, next) {
+  const { email, newname } = req.body;
+
+  try {
+    const user = await User.findOne({ email }).exec();
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Update user's name
+    user.username = newname;
+    await user.save();
+
+    console.log('User updated:', user);
+    return res.status(200).json({ message: 'User name updated successfully' });
+  } catch (error) {
+    console.error('Error updating name:', error);
+    return res.status(500).json({ message: 'Error updating user name' });
+  }
+});
+
+// Update user's email
+router.put('/updateUserEmail', async function (req, res, next) {
+  const { email, newemail } = req.body;
+
+  try {
+    const user = await User.findOne({ email }).exec();
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Update user's email
+    user.email = newemail;
+    await user.save();
+
+    console.log('User updated:', user);
+    return res.status(200).json({ message: 'User email updated successfully' });
+  } catch (error) {
+    console.error('Error updating email:', error);
+    return res.status(500).json({ message: 'Error updating user email' });
+  }
+});
+
+
 module.exports = router;
