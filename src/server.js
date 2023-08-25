@@ -22,11 +22,11 @@ app.use(function(err, req, res, next){
   res.status(422).send({error: err.message});
 });
 
-app.listen(8000, () =>{
-    console.log("Server running");
-})
+app.listen(process.env.PORT || 8000, () => {
+  console.log("Server running");
+});
 
- mongoose.connect('mongodb+srv://cryptoacc:cryptotracker123@cryptotrackercluster.dovka9d.mongodb.net/?retryWrites=true&w=majority', {
+mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   dbName: 'Cryptotracker',
