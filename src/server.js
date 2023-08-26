@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 
 const corsOptions = {
-  origin: 'https://cryptotracker-frontend-ozkc.vercel.app',
+  origin: 'https://cryptotracker-frontend-ennc.vercel.app',
   methods: ['GET', 'PUT', 'POST', 'DELETE'],
   allowedHeaders: ['Content-Type'],
 };
